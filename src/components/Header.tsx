@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import Navbar from "./NavBar";
 
-export default function() {
+export default function Header() {
   const pathName = usePathname();
 
   const hideNavbarOnRoutes = ["/sign-in", "/sign-up"];
