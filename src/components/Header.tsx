@@ -1,16 +1,16 @@
-"use client"
-
-import { usePathname } from "next/navigation";
+import { headers } from "next/headers";
 import Navbar from "./NavBar";
 
-export default function Header() {
-  const pathName = usePathname();
+export default async function Header() {
+  const header = await headers();
+  const pathname = header.get("referer") || "/";
 
   const hideNavbarOnRoutes = ["/sign-in", "/sign-up"];
-
-  const shouldHideNavbar = hideNavbarOnRoutes.some((route) => pathName.startsWith(route));
+  const shouldHideNavbar = hideNavbarOnRoutes.some((route) =>
+    pathname.startsWith(route)
+  );
 
   if (shouldHideNavbar) return null;
 
-  return <Navbar />
+  return <Navbar />;
 }
