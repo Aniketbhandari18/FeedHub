@@ -1,6 +1,4 @@
-"use client";
-
-import * as React from "react";
+import * as motion from "motion/react-client";
 import logo from "../../public/Logo.png";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -14,7 +12,7 @@ import {
 import Image from "next/image";
 import { Tektur } from "next/font/google";
 
-export const tektur = Tektur({
+const tektur = Tektur({
   subsets: ["latin"],
   weight: ["400", "700"],
   variable: "--font-tektur",
@@ -22,7 +20,12 @@ export const tektur = Tektur({
 
 export default function Navbar() {
   return (
-    <nav className="mx-auto px-4 sm:px-6 lg:px-6 bg-white shadow-sm border-b border-gray-200">
+    <motion.nav
+      initial={{ opacity: 0, y: -40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="sticky w-full mx-auto px-4 sm:px-6 lg:px-6 bg-white shadow-sm border-b border-gray-200"
+    >
       <div className="flex justify-between items-center h-16">
         <Link href="/">
           <div className="flex items-center space-x-2">
@@ -63,6 +66,6 @@ export default function Navbar() {
           </SignedOut>
         </div>
       </div>
-    </nav>
+    </motion.nav>
   );
 }
