@@ -15,12 +15,45 @@ datasource db {
 
 
 model User {
-  id         String   @id @default(cuid())
-  clerkId    String   @unique
-  email      String   @unique
-  first_name String?
-  last_name  String?
-  avatar     String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
+  id          String    @id @default(cuid())
+  clerkId     String    @unique
+  email       String    @unique
+  first_name  String?
+  last_name   String?
+  avatar      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  createdHubs Hub[]     // Hubs the user created
+  hubs        HubUser[] // Hubs the user is a part of
+}
+
+model Hub {
+  id          String    @id @default(cuid())
+  title       String
+  description String?
+  createdById String
+  createdAt   DateTime  @default(now())
+
+  createdBy   User      @relation(fields: [createdById], references: [id])
+  users       HubUser[] // users who joined this hub
+}
+
+model HubUser {
+  userId      String
+  hubId       String
+  role        Role
+  displayName String    // eg. "HOD" instead of "Admin", "Student" instead of "Member"
+  joinedAt    DateTime  @default(now())
+
+  user        User      @relation(fields: [userId], references: [id])
+  hub         Hub       @relation(fields: [hubId], references: [id])
+
+  @@id([userId, hubId]) //composite primary key
+}
+
+enum Role {
+  ADMIN
+  MODERATOR
+  MEMBER
 }
