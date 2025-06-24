@@ -43,7 +43,7 @@ model HubUser {
   userId      String
   hubId       String
   role        Role
-  displayName String    // eg. "HOD" instead of "Admin", "Student" instead of "Member"
+  displayName String?   // eg. "HOD" instead of "Admin", "Student" instead of "Member"
   joinedAt    DateTime  @default(now())
 
   user        User      @relation(fields: [userId], references: [id])
