@@ -9,6 +9,7 @@ import {
 } from "../ui/dropdown-menu";
 import { Button } from "../ui/button";
 import { ChevronDown, Code, Plus, Share2, Users } from "lucide-react";
+import CreateHubDialog from "../CreateHubDialog";
 
 type activeTab = "hubs" | "feedbacks";
 export type openDialog = "createHub" | "joinHub" | "createOpenFeedback" | null;
@@ -21,6 +22,7 @@ const DashboardController = ({
   openFeedbackList: ReactNode;
 }) => {
   const [activeTab, setActiveTab] = useState<activeTab>("hubs");
+  const [openDialog, setOpenDialog] = useState<openDialog>(null);
 
   return (
     <div>
@@ -60,21 +62,21 @@ const DashboardController = ({
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className="w-52 mt-1" align="end">
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setOpenDialog("createHub")}>
               {/* Create New Hub Button */}
               <div className="flex items-center mb-0.5 gap-x-2 cursor-pointer">
                 <Users className="text-gray-600" />
                 <span className="font-semibold">Create New Hub</span>
               </div>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setOpenDialog("joinHub")}>
               {/* Join Hub Button */}
               <div className="flex items-center mb-0.5 gap-x-2 cursor-pointer">
                 <Code className="text-gray-600" />
                 <span className="font-semibold">Join Hub</span>
               </div>
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onSelect={() => setOpenDialog("createOpenFeedback")}>
               {/* Create Open Feedback Button */}
               <div className="flex items-center gap-x-2 cursor-pointer">
                 <Share2 className="text-gray-600" />
@@ -87,6 +89,9 @@ const DashboardController = ({
 
       {/* List */}
       <div>{activeTab === "hubs" ? hubList : openFeedbackList}</div>
+
+      {/* Dialogs */}
+      { openDialog === "createHub" && <CreateHubDialog setOpenDialog={setOpenDialog} /> }
     </div>
   );
 };
