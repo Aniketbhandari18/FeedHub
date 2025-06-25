@@ -15,28 +15,31 @@ datasource db {
 
 
 model User {
-  id          String    @id @default(cuid())
-  clerkId     String    @unique
-  email       String    @unique
-  first_name  String?
-  last_name   String?
-  avatar      String
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  id                 String       @id @default(cuid())
+  clerkId            String       @unique
+  email              String       @unique
+  first_name         String?
+  last_name          String?
+  avatar             String
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 
-  createdHubs Hub[]     // Hubs the user created
-  hubs        HubUser[] // Hubs the user is a part of
+  createdHubs        Hub[]        // Hubs the user created
+  hubs               HubUser[]    // Hubs the user is a part of
+  createdInviteLinks InviteLink[] // InviteLinks the user created
 }
 
 model Hub {
-  id          String    @id @default(cuid())
+  id          String       @id @default(cuid())
   title       String
   description String?
   createdById String
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime     @default(now())
 
-  createdBy   User      @relation(fields: [createdById], references: [id])
-  users       HubUser[] // users who joined this hub
+  inviteLinks InviteLink[] // invite links associated with this hubs
+  users       HubUser[]    // users who joined this hub
+
+  createdBy   User         @relation(fields: [createdById], references: [id])
 }
 
 model HubUser {
@@ -50,6 +53,20 @@ model HubUser {
   hub         Hub       @relation(fields: [hubId], references: [id])
 
   @@id([userId, hubId]) //composite primary key
+}
+
+model InviteLink {
+  id          String   @id @default(cuid())
+  hubId       String
+  token       String   @unique
+  role        Role
+  expiresAt   DateTime
+  isActive    Boolean  @default(true) // if admin manually deactivates an invite link
+  createdById String
+  createdAt   DateTime @default(now())
+
+  hub         Hub      @relation(fields: [hubId], references: [id])
+  createdBy   User     @relation(fields: [createdById], references: [id])
 }
 
 enum Role {
