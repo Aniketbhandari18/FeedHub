@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useState } from "react";
+import { ReactNode, useState, useTransition } from "react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,6 +10,7 @@ import {
 import { Button } from "../ui/button";
 import { ChevronDown, Code, Plus, Share2, Users } from "lucide-react";
 import CreateHubDialog from "../CreateHubDialog";
+import Loader from "../Loader";
 
 type activeTab = "hubs" | "feedbacks";
 export type openDialog = "createHub" | "joinHub" | "createOpenFeedback" | null;
@@ -23,6 +24,7 @@ const DashboardController = ({
 }) => {
   const [activeTab, setActiveTab] = useState<activeTab>("hubs");
   const [openDialog, setOpenDialog] = useState<openDialog>(null);
+  const [isPending, startTransition] = useTransition();
 
   return (
     <div>
@@ -88,10 +90,22 @@ const DashboardController = ({
       </div>
 
       {/* List */}
-      <div>{activeTab === "hubs" ? hubList : openFeedbackList}</div>
+      <div>
+        {isPending ? (
+          <Loader className="mt-40" />
+        ): (
+          activeTab === "hubs" ? (hubList): (openFeedbackList)
+        )}
+      </div>
 
       {/* Dialogs */}
-      { openDialog === "createHub" && <CreateHubDialog setOpenDialog={setOpenDialog} /> }
+      { openDialog === "createHub" && (
+          <CreateHubDialog 
+            setOpenDialog={setOpenDialog} 
+            startTransition={startTransition} 
+          />
+        ) 
+      }
     </div>
   );
 };

@@ -10,21 +10,25 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import { Button } from "./ui/button";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, TransitionStartFunction, useState } from "react";
 import { openDialog } from "./dashboard/DashboardController";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
-import { useAuth } from "@clerk/nextjs";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 type CreateHubDialog = Dispatch<SetStateAction<openDialog>>;
 
 const CreateHubDialog = ({
   setOpenDialog,
+  startTransition
 }: {
   setOpenDialog: CreateHubDialog;
+  startTransition: TransitionStartFunction;
 }) => {
+  const router = useRouter();
+
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -71,6 +75,9 @@ const CreateHubDialog = ({
 
       if (res.ok) {
         toast.success("Hub created successfully");
+        startTransition(() => {
+          router.refresh();
+        })
       }
     } catch (error) {
       setIsLoading(false);
